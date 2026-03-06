@@ -23,6 +23,24 @@ module load openfoam/12.20240902/gnu-7.3.0
 # This is an MPI run; keep OpenMP at 1 thread per rank.
 export OMP_NUM_THREADS=1
 
+# Initialize fields on the undecomposed mesh before parallel run.
+if [ ! -f system/setFieldsDict ]; then
+    echo "ERROR: system/setFieldsDict not found." >&2
+    exit 1
+fi
+
+if [ ! -f constant/polyMesh/cellZones ]; then
+    echo "ERROR: constant/polyMesh/cellZones not found. Build/import mesh first." >&2
+    exit 1
+fi
+
+if ! grep -q "^[[:space:]]*INIT_ZONE[[:space:]]*$" constant/polyMesh/cellZones; then
+    echo "ERROR: INIT_ZONE cellZone not found in constant/polyMesh/cellZones." >&2
+    echo "Update the Gmsh physical volumes and remesh before submitting." >&2
+    exit 1
+fi
+
+setFields -overwrite | tee log.setFields
 decomposePar -force | tee log.decomposePar
 mpirun -np "${NSLOTS:-40}" rhoCentralFoam -parallel | tee log.rhoCentralFoam.parallel
 reconstructPar -latestTime | tee log.reconstructPar
