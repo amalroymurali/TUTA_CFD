@@ -7,7 +7,21 @@ if [ -z "${WM_PROJECT_DIR:-}" ]; then
     source /opt/openfoam13/etc/bashrc
 fi
 
-gmsh -3 ../data_clean/nozzle_geometry/nozzle_cfd_structured.geo -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
+geo_src=../data_clean/nozzle_geometry/nozzle_cfd_structured.geo
+geo_input="$geo_src"
+geo_tmp=
+
+# Guard against an accidental leading line number in generated comments, e.g. "2// ...".
+if head -n1 "$geo_src" | grep -qE '^[0-9]+//'; then
+    geo_tmp=./nozzle_cfd_structured.fixed.geo
+    sed '1s/^[0-9]\+\/\//\/\//' "$geo_src" > "$geo_tmp"
+    geo_input="$geo_tmp"
+fi
+
+gmsh -3 "$geo_input" -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
+if [ -n "$geo_tmp" ]; then
+    rm -f "$geo_tmp"
+fi
 gmshToFoam nozzle_cfd_structured.msh | tee log.gmshToFoam
 
 # OpenFOAM 12 expects an explicit zone type entry in cellZones.
@@ -22,5 +36,38 @@ stitchMesh "((IFACE12_A IFACE12_B))" | tee log.stitch12
 stitchMesh "((IFACE14_A IFACE14_B))" | tee log.stitch14
 stitchMesh "((IFACE15_A IFACE15_B))" | tee log.stitch15
 changeDictionary -constant | tee log.changeDictionary
+
+# Initialize fields before solving.
+if [ ! -f system/setFieldsDict ]; then
+    echo "ERROR: system/setFieldsDict not found." >&2
+    exit 1
+fi
+
+if [ ! -f constant/polyMesh/cellZones ]; then
+    echo "ERROR: constant/polyMesh/cellZones not found. Build/import mesh first." >&2
+    exit 1
+fi
+
+setfields_args=()
+if setFields -help 2>&1 | grep -q -- "-overwrite"; then
+    setfields_args+=("-overwrite")
+fi
+
+if grep -q "^[[:space:]]*INIT_ZONE[[:space:]]*$" constant/polyMesh/cellZones; then
+    setFields "${setfields_args[@]}" | tee log.setFields
+else
+    echo "ERROR: INIT_ZONE cellZone not found in constant/polyMesh/cellZones." >&2
+    echo "Update the Gmsh physical volumes and remesh before running." >&2
+    exit 1
+fi
+
 checkMesh | tee log.checkMesh
+
+# Cell zones are labels only; ensure the mesh remains a single connected region
+# so INIT_ZONE is solved together with the rest of the fluid.
+if ! grep -q "Number of regions: 1 (OK)." log.checkMesh; then
+    echo "ERROR: Mesh is not a single region; INIT_ZONE would not be part of one fluid solve." >&2
+    exit 1
+fi
+
 rhoCentralFoam | tee log.rhoCentralFoam

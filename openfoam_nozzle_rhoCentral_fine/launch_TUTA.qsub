@@ -40,7 +40,12 @@ if ! grep -q "^[[:space:]]*INIT_ZONE[[:space:]]*$" constant/polyMesh/cellZones; 
     exit 1
 fi
 
-setFields -overwrite | tee log.setFields
+setfields_args=()
+if setFields -help 2>&1 | grep -q -- "-overwrite"; then
+    setfields_args+=("-overwrite")
+fi
+
+setFields "${setfields_args[@]}" | tee log.setFields
 decomposePar -force | tee log.decomposePar
 mpirun -np "${NSLOTS:-40}" rhoCentralFoam -parallel | tee log.rhoCentralFoam.parallel
 reconstructPar -latestTime | tee log.reconstructPar

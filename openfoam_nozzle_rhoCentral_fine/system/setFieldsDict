@@ -8,8 +8,8 @@ FoamFile
 
 defaultFieldValues
 (
-    volScalarFieldValue p 101325;
-    volVectorFieldValue U (0 0 0);
+    volScalarFieldValue p 101325
+    volVectorFieldValue U (0 0 0)
 );
 
 regions
@@ -19,8 +19,8 @@ regions
         zone INIT_ZONE;
         fieldValues
         (
-            volScalarFieldValue p 5e6;
-            volVectorFieldValue U (150 0 0);
+            volScalarFieldValue p 5e6
+            volVectorFieldValue U (150 0 0)
         );
     }
 );
