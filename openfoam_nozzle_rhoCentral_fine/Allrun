@@ -9,6 +9,15 @@ fi
 
 gmsh -3 ../data_clean/nozzle_geometry/nozzle_cfd_structured.geo -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
 gmshToFoam nozzle_cfd_structured.msh | tee log.gmshToFoam
+
+# OpenFOAM 12 expects an explicit zone type entry in cellZones.
+if [ -f constant/polyMesh/cellZones ] && ! grep -q "type[[:space:]]*cellZone;" constant/polyMesh/cellZones; then
+    sed -i '/^[[:space:]]*FLUID[[:space:]]*$/{
+N
+s/\n[[:space:]]*{/\n{\n    type            cellZone;/
+}' constant/polyMesh/cellZones
+fi
+
 stitchMesh "((IFACE12_A IFACE12_B))" | tee log.stitch12
 stitchMesh "((IFACE14_A IFACE14_B))" | tee log.stitch14
 stitchMesh "((IFACE15_A IFACE15_B))" | tee log.stitch15

@@ -18,6 +18,7 @@ FoamFile
 (
 FLUID
 {
+type            cellZone;
 cellLabels      List<label> 
 96674
 (
