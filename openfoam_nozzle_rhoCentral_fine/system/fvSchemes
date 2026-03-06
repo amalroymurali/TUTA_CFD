@@ -21,6 +21,8 @@ gradSchemes
 divSchemes
 {
     default         none;
+    div(phi,k)      Gauss limitedLinear 1;
+    div(phi,omega)  Gauss limitedLinear 1;
 }
 
 laplacianSchemes
@@ -40,4 +42,9 @@ interpolationSchemes
 snGradSchemes
 {
     default         corrected;
+}
+
+wallDist
+{
+    method          meshWave;
 }

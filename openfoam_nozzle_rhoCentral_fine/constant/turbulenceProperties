@@ -6,4 +6,18 @@ FoamFile
     object      turbulenceProperties;
 }
 
-simulationType  laminar;
+simulationType  RAS;
+
+RAS
+{
+    model           kOmegaSST;
+    turbulence      on;
+    printCoeffs     on;
+
+    kOmegaSSTCoeffs
+    {
+        a1          0.357;
+        alphaK2     0.44;
+        alphaOmega2 0.91;
+    }
+}

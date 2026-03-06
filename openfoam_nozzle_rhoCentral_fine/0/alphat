@@ -1,0 +1,51 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      alphat;
+}
+
+dimensions      [1 -1 -1 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    SOLID_WALL
+    {
+        type        compressible::alphatWallFunction;
+        nut         nut;
+        value       uniform 0;
+    }
+
+    INLET
+    {
+        type        zeroGradient;
+    }
+
+    OUTLET
+    {
+        type        zeroGradient;
+    }
+
+    FARFIELD
+    {
+        type        zeroGradient;
+    }
+
+    AXIALSYMMETRY
+    {
+        type        symmetryPlane;
+    }
+
+    FRONT
+    {
+        type        empty;
+    }
+
+    BACK
+    {
+        type        empty;
+    }
+}

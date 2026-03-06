@@ -30,6 +30,15 @@ solvers
         tolerance       1e-10;
         relTol          0;
     }
+
+    "(k|omega).*"
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        nSweeps         2;
+        tolerance       1e-09;
+        relTol          0;
+    }
 }
 
 PIMPLE
