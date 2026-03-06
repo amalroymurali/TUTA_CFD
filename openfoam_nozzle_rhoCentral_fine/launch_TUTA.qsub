@@ -14,8 +14,6 @@
 
 set -euo pipefail
 
-cd "$(dirname "$0")"
-
 echo "Job started on $(hostname) at $(date)"
 echo "Allocated slots: ${NSLOTS:-1}"
 
