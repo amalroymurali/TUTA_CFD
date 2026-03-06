@@ -8,7 +8,6 @@
 # OpenFOAM case outputs (keep only setup directories/files)
 openfoam_nozzle_rhoCentral_fine/[0-9]*/
 openfoam_nozzle_rhoCentral_fine/-[0-9]*/
-openfoam_nozzle_rhoCentral_fine/constant/*
 !openfoam_nozzle_rhoCentral_fine/0/
 !openfoam_nozzle_rhoCentral_fine/0.orig/
 openfoam_nozzle_rhoCentral_fine/processor*/

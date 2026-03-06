@@ -25,14 +25,6 @@ module load openfoam/12.20240902/gnu-7.3.0
 # This is an MPI run; keep OpenMP at 1 thread per rank.
 export OMP_NUM_THREADS=1
 
-gmsh -3 ../data_clean/nozzle_geometry/nozzle_cfd_structured.geo -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
-gmshToFoam nozzle_cfd_structured.msh | tee log.gmshToFoam
-stitchMesh "((IFACE12_A IFACE12_B))" | tee log.stitch12
-stitchMesh "((IFACE14_A IFACE14_B))" | tee log.stitch14
-stitchMesh "((IFACE15_A IFACE15_B))" | tee log.stitch15
-changeDictionary -constant | tee log.changeDictionary
-checkMesh | tee log.checkMesh
-
 decomposePar -force | tee log.decomposePar
 mpirun -np "${NSLOTS:-40}" rhoCentralFoam -parallel | tee log.rhoCentralFoam.parallel
 reconstructPar -latestTime | tee log.reconstructPar
