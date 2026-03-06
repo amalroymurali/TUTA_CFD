@@ -1,0 +1,46 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+
+boundary
+{
+    SOLID_WALL
+    {
+        type wall;
+    }
+
+    INLET
+    {
+        type patch;
+    }
+
+    OUTLET
+    {
+        type patch;
+    }
+
+    FARFIELD
+    {
+        type patch;
+    }
+
+    AXIALSYMMETRY
+    {
+        type symmetryPlane;
+    }
+
+    FRONT
+    {
+        type empty;
+    }
+
+    BACK
+    {
+        type empty;
+    }
+
+}

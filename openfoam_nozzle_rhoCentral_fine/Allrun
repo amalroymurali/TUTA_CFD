@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+if [ -z "${WM_PROJECT_DIR:-}" ]; then
+    source /opt/openfoam13/etc/bashrc
+fi
+
+gmsh -3 ../data_clean/nozzle_geometry/nozzle_cfd_structured.geo -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
+gmshToFoam nozzle_cfd_structured.msh | tee log.gmshToFoam
+stitchMesh "((IFACE12_A IFACE12_B))" | tee log.stitch12
+stitchMesh "((IFACE14_A IFACE14_B))" | tee log.stitch14
+stitchMesh "((IFACE15_A IFACE15_B))" | tee log.stitch15
+changeDictionary -constant | tee log.changeDictionary
+checkMesh | tee log.checkMesh
+rhoCentralFoam | tee log.rhoCentralFoam

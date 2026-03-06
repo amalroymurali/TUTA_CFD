@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "$0")"
+rm -rf constant/polyMesh [1-9]* [1-9]*.* 0.* *.OpenFOAM *.foam processor* log.* postProcessing nozzle_cfd_structured.msh nozzle_cfd_structured_3d.msh

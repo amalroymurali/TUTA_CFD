@@ -1,0 +1,41 @@
+#!/bin/bash -l
+#
+# Sun Grid Engine (SGE) submission directives.
+# Note: SGE options are intentionally short-form; inline comments expand each one.
+#$ -N TUTA         # Job name
+#$ -A Brunel_allocation         # Account/allocation
+#$ -P Gold                      # Project (higher-priority than Free on Young)
+#$ -l h_rt=24:00:00             # Hard runtime limit (HH:MM:SS)
+#$ -l mem=2G                    # Memory per slot
+#$ -pe smp 40                   # Parallel environment and slot count
+#$ -cwd                         # Start in submission directory
+#$ -j y                         # Merge stderr into stdout
+#$ -o young_openfoam.$JOB_ID.out # Standard output file
+
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+echo "Job started on $(hostname) at $(date)"
+echo "Allocated slots: ${NSLOTS:-1}"
+
+if [ -z "${WM_PROJECT_DIR:-}" ]; then
+  source /opt/openfoam13/etc/bashrc
+fi
+
+# This is an MPI run; keep OpenMP at 1 thread per rank.
+export OMP_NUM_THREADS=1
+
+gmsh -3 ../data_clean/nozzle_geometry/nozzle_cfd_structured.geo -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
+gmshToFoam nozzle_cfd_structured.msh | tee log.gmshToFoam
+stitchMesh "((IFACE12_A IFACE12_B))" | tee log.stitch12
+stitchMesh "((IFACE14_A IFACE14_B))" | tee log.stitch14
+stitchMesh "((IFACE15_A IFACE15_B))" | tee log.stitch15
+changeDictionary -constant | tee log.changeDictionary
+checkMesh | tee log.checkMesh
+
+decomposePar -force | tee log.decomposePar
+mpirun -np "${NSLOTS:-40}" rhoCentralFoam -parallel | tee log.rhoCentralFoam.parallel
+reconstructPar -latestTime | tee log.reconstructPar
+
+echo "Job $JOB_ID finished at $(date)"

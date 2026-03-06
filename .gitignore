@@ -1,0 +1,25 @@
+*.msh
+*.dat
+*.h5
+*.gz
+
+*trash*
+# OpenFOAM case outputs (keep only setup directories/files)
+openfoam_nozzle_rhoCentral_fine/[0-9]*/
+openfoam_nozzle_rhoCentral_fine/-[0-9]*/
+openfoam_nozzle_rhoCentral_fine/constant/*
+!openfoam_nozzle_rhoCentral_fine/0/
+!openfoam_nozzle_rhoCentral_fine/0.orig/
+openfoam_nozzle_rhoCentral_fine/processor*/
+openfoam_nozzle_rhoCentral_fine/postProcessing/
+openfoam_nozzle_rhoCentral_fine/dynamicCode/
+openfoam_nozzle_rhoCentral_fine/log
+openfoam_nozzle_rhoCentral_fine/log.*
+openfoam_nozzle_rhoCentral_fine/logs/
+openfoam_nozzle_rhoCentral_fine/jobInfo/
+openfoam_nozzle_rhoCentral_fine/TDAC/
+openfoam_nozzle_rhoCentral_fine/VTK/
+openfoam_nozzle_rhoCentral_fine/sequencedVTK/
+openfoam_nozzle_rhoCentral_fine/*.OpenFOAM
+openfoam_nozzle_rhoCentral_fine/*.foam
+openfoam_nozzle_rhoCentral_fine/*.blockMesh
