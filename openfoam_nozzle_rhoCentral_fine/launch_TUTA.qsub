@@ -19,9 +19,8 @@ cd "$(dirname "$0")"
 echo "Job started on $(hostname) at $(date)"
 echo "Allocated slots: ${NSLOTS:-1}"
 
-if [ -z "${WM_PROJECT_DIR:-}" ]; then
-  source /opt/openfoam13/etc/bashrc
-fi
+module purge
+module load openfoam/12.20240902/gnu-7.3.0
 
 # This is an MPI run; keep OpenMP at 1 thread per rank.
 export OMP_NUM_THREADS=1
