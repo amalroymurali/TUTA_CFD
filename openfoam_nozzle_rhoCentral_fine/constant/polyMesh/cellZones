@@ -18,6 +18,7 @@ FoamFile
 (
 INIT_ZONE
 {
+type            cellZone;
 cellLabels      List<label> 
 11248
 (
@@ -11275,6 +11276,7 @@ cellLabels      List<label>
 
 FLUID
 {
+type            cellZone;
 cellLabels      List<label> 
 100000
 (

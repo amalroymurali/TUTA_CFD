@@ -20,7 +20,7 @@ maxCo           0.3;
 maxDeltaT       1e-4;
 
 writeControl    timeStep;
-writeInterval   20;
+writeInterval   100;
 
 purgeWrite      5;
 writeFormat     ascii;
