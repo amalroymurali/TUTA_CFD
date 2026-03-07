@@ -18,7 +18,8 @@ if head -n1 "$geo_src" | grep -qE '^[0-9]+//'; then
     geo_input="$geo_tmp"
 fi
 
-gmsh -3 "$geo_input" -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
+# Use a clean HOME for gmsh to avoid failures from user-level ~/.gmshrc syntax issues.
+HOME=/tmp gmsh -3 "$geo_input" -format msh2 -o nozzle_cfd_structured.msh | tee log.gmsh
 if [ -n "$geo_tmp" ]; then
     rm -f "$geo_tmp"
 fi
@@ -62,6 +63,10 @@ else
 fi
 
 checkMesh | tee log.checkMesh
+
+# Remove mesh-sized carryover fields from previous runs that can mismatch
+# after remeshing and trigger startup IO errors.
+rm -f 0/phi 0/rho 0/e
 
 # Cell zones are labels only; ensure the mesh remains a single connected region
 # so INIT_ZONE is solved together with the rest of the fluid.

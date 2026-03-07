@@ -3,6 +3,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      alphat;
 }
 
@@ -12,40 +13,34 @@ internalField   uniform 0;
 
 boundaryField
 {
-    SOLID_WALL
-    {
-        type        compressible::alphatWallFunction;
-        nut         nut;
-        value       uniform 0;
-    }
-
-    INLET
-    {
-        type        zeroGradient;
-    }
-
-    OUTLET
-    {
-        type        zeroGradient;
-    }
-
-    FARFIELD
-    {
-        type        zeroGradient;
-    }
-
-    AXIALSYMMETRY
-    {
-        type        symmetryPlane;
-    }
-
     FRONT
     {
-        type        empty;
+        type            empty;
     }
-
+    INLET
+    {
+        type            zeroGradient;
+    }
+    SOLID_WALL
+    {
+        type            compressible::alphatWallFunction;
+        nut             nut;
+        value           uniform 0;
+    }
+    AXIALSYMMETRY
+    {
+        type            symmetryPlane;
+    }
     BACK
     {
-        type        empty;
+        type            empty;
+    }
+    FARFIELD
+    {
+        type            zeroGradient;
+    }
+    OUTLET
+    {
+        type            zeroGradient;
     }
 }

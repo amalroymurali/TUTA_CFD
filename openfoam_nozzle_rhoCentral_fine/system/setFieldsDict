@@ -6,9 +6,10 @@ FoamFile
     object      setFieldsDict;
 }
 
-defaultFieldValues
+default
 (
     volScalarFieldValue p 101325
+    volScalarFieldValue T 300
     volVectorFieldValue U (0 0 0)
 );
 
@@ -21,6 +22,7 @@ regions
         (
             volScalarFieldValue p 5e6
             volVectorFieldValue U (150 0 0)
+            volScalarFieldValue T 350
         );
     }
 );

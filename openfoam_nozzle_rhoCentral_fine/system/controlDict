@@ -9,18 +9,18 @@ FoamFile
 solver          shockFluid;
 
 startFrom       latestTime;
-startTime       0;
+startTime       8.338e-5;
 
 stopAt          endTime;
-endTime         0.002;
+endTime         0.02;
 
-deltaT          1e-7;
+deltaT          1e-9;
 adjustTimeStep  yes;
-maxCo           0.5;
-maxDeltaT       1e-5;
+maxCo           0.3;
+maxDeltaT       1e-4;
 
 writeControl    timeStep;
-writeInterval   500;
+writeInterval   20;
 
 purgeWrite      5;
 writeFormat     ascii;
@@ -29,5 +29,17 @@ writeCompression off;
 
 timeFormat      general;
 timePrecision   6;
+
+functions
+{
+    writeKeyFields
+    {
+        type            writeObjects;
+        libs            ("libutilityFunctionObjects.so");
+        writeControl    writeTime;
+        writeOption     anyWrite;
+        objects         (p rho T k omega U);
+    }
+}
 
 runTimeModifiable true;

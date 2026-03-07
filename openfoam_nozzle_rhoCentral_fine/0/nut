@@ -3,6 +3,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      nut;
 }
 
@@ -12,42 +13,36 @@ internalField   uniform 0;
 
 boundaryField
 {
-    SOLID_WALL
-    {
-        type        nutkWallFunction;
-        value       uniform 0;
-    }
-
-    INLET
-    {
-        type        calculated;
-        value       uniform 0;
-    }
-
-    OUTLET
-    {
-        type        calculated;
-        value       uniform 0;
-    }
-
-    FARFIELD
-    {
-        type        calculated;
-        value       uniform 0;
-    }
-
-    AXIALSYMMETRY
-    {
-        type        symmetryPlane;
-    }
-
     FRONT
     {
-        type        empty;
+        type            empty;
     }
-
+    INLET
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+    SOLID_WALL
+    {
+        type            nutkWallFunction;
+        value           uniform 0;
+    }
+    AXIALSYMMETRY
+    {
+        type            symmetryPlane;
+    }
     BACK
     {
-        type        empty;
+        type            empty;
+    }
+    FARFIELD
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+    OUTLET
+    {
+        type            calculated;
+        value           uniform 0;
     }
 }

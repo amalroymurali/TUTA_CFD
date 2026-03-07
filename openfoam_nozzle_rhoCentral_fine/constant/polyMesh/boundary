@@ -22,16 +22,16 @@ FoamFile
     {
         type            empty;
         physicalType    patch;
-        nFaces          96595;
-        startFace       192302;
+        nFaces          111248;
+        startFace       221505;
     }
 
     INLET
     {
         type            patch;
         physicalType    patch;
-        nFaces          79;
-        startFace       288897;
+        nFaces          74;
+        startFace       332753;
     }
 
     SOLID_WALL
@@ -39,39 +39,39 @@ FoamFile
         type            wall;
         physicalType    patch;
         nFaces          324;
-        startFace       288976;
+        startFace       332827;
     }
 
     AXIALSYMMETRY
     {
         type            symmetryPlane;
         physicalType    patch;
-        nFaces          541;
-        startFace       289300;
+        nFaces          651;
+        startFace       333151;
     }
 
     BACK
     {
         type            empty;
         physicalType    patch;
-        nFaces          96595;
-        startFace       289841;
+        nFaces          111248;
+        startFace       333802;
     }
 
     FARFIELD
     {
         type            patch;
         physicalType    patch;
-        nFaces          657;
-        startFace       386436;
+        nFaces          765;
+        startFace       445050;
     }
 
     OUTLET
     {
         type            patch;
         physicalType    patch;
-        nFaces          175;
-        startFace       387093;
+        nFaces          168;
+        startFace       445815;
     }
 
 )
