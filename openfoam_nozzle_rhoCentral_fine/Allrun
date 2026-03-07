@@ -55,7 +55,11 @@ if setFields -help 2>&1 | grep -q -- "-overwrite"; then
 fi
 
 if grep -q "^[[:space:]]*INIT_ZONE[[:space:]]*$" constant/polyMesh/cellZones; then
-    setFields "${setfields_args[@]}" | tee log.setFields
+    if [ "${#setfields_args[@]}" -gt 0 ]; then
+        setFields "${setfields_args[@]}" | tee log.setFields
+    else
+        setFields | tee log.setFields
+    fi
 else
     echo "ERROR: INIT_ZONE cellZone not found in constant/polyMesh/cellZones." >&2
     echo "Update the Gmsh physical volumes and remesh before running." >&2
