@@ -1,0 +1,51 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 1e-6;
+
+boundaryField
+{
+    FRONT
+    {
+        type            empty;
+    }
+    INLET
+    {
+        type            inletOutlet;
+        inletValue      uniform 1e-6;
+        value           uniform 1e-6;
+    }
+    SOLID_WALL
+    {
+        type            kqRWallFunction;
+        value           uniform 1e-6;
+    }
+    AXIALSYMMETRY
+    {
+        type            symmetryPlane;
+    }
+    BACK
+    {
+        type            empty;
+    }
+    FARFIELD
+    {
+        type            inletOutlet;
+        inletValue      uniform 1e-6;
+        value           uniform 1e-6;
+    }
+    OUTLET
+    {
+        type            inletOutlet;
+        inletValue      uniform 1e-6;
+        value           uniform 1e-6;
+    }
+}

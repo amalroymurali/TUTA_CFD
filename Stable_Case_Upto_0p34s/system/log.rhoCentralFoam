@@ -1,0 +1,29 @@
+
+rhoCentralFoam has been superseded and replaced by the more general
+shockFluid solver module executed by the foamRun application:
+
+    foamRun -solver shockFluid
+
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 13-cde978a97c93
+Exec   : foamRun -solver shockFluid
+Date   : Mar 06 2026
+Time   : 20:30:37
+Host   : "laptop"
+PID    : 54191
+I/O    : uncollated
+Case   : /home/roy/Desktop/Sergey/TUTA_AIAAJ/openfoam_nozzle_rhoCentral_fine/system
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+

@@ -1,0 +1,57 @@
+#!/bin/bash -l
+#
+# Sun Grid Engine (SGE) submission directives.
+# Note: SGE options are intentionally short-form; inline comments expand each one.
+#$ -N TUTA         # Job name
+#$ -A Brunel_allocation         # Account/allocation
+#$ -P Gold                      # Project (higher-priority than Free on Young)
+#$ -l h_rt=24:00:00             # Hard runtime limit (HH:MM:SS)
+#$ -l mem=2G                    # Memory per slot
+#$ -pe smp 40                   # Parallel environment and slot count
+#$ -cwd                         # Start in submission directory
+#$ -j y                         # Merge stderr into stdout
+#$ -o young_openfoam.$JOB_ID.out # Standard output file
+
+set -euo pipefail
+
+echo "Job started on $(hostname) at $(date)"
+echo "Allocated slots: ${NSLOTS:-1}"
+
+module purge
+module load openfoam/12.20240902/gnu-7.3.0
+
+# This is an MPI run; keep OpenMP at 1 thread per rank.
+export OMP_NUM_THREADS=1
+
+# Initialize fields on the undecomposed mesh before parallel run.
+if [ ! -f system/setFieldsDict ]; then
+    echo "ERROR: system/setFieldsDict not found." >&2
+    exit 1
+fi
+
+if [ ! -f constant/polyMesh/cellZones ]; then
+    echo "ERROR: constant/polyMesh/cellZones not found. Build/import mesh first." >&2
+    exit 1
+fi
+
+if ! grep -q "^[[:space:]]*INIT_ZONE[[:space:]]*$" constant/polyMesh/cellZones; then
+    echo "ERROR: INIT_ZONE cellZone not found in constant/polyMesh/cellZones." >&2
+    echo "Update the Gmsh physical volumes and remesh before submitting." >&2
+    exit 1
+fi
+
+setfields_args=()
+if setFields -help 2>&1 | grep -q -- "-overwrite"; then
+    setfields_args+=("-overwrite")
+fi
+
+if [ "${#setfields_args[@]}" -gt 0 ]; then
+    setFields "${setfields_args[@]}" | tee log.setFields
+else
+    setFields | tee log.setFields
+fi
+decomposePar -force | tee log.decomposePar
+mpirun -np "${NSLOTS:-40}" rhoCentralFoam -parallel | tee log.rhoCentralFoam.parallel
+reconstructPar -latestTime | tee log.reconstructPar
+
+echo "Job $JOB_ID finished at $(date)"

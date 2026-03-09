@@ -12,7 +12,7 @@ startFrom       latestTime;
 startTime       8.338e-5;
 
 stopAt          endTime;
-endTime         0.02;
+endTime         0.6;
 
 deltaT          1e-9;
 adjustTimeStep  yes;
@@ -20,9 +20,9 @@ maxCo           0.3;
 maxDeltaT       1e-4;
 
 writeControl    timeStep;
-writeInterval   100;
+writeInterval   15000;
 
-purgeWrite      5;
+purgeWrite      6;
 writeFormat     ascii;
 writePrecision  8;
 writeCompression off;
